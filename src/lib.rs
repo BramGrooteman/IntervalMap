@@ -27,7 +27,9 @@ imap.insert(&10, &20, &'v'); // Inserts 'v' between 10 and 20
 imap.get(&15) == 'v'
 ```
 
-The map is
+The map is canonical, meaning that successive overlapping intervals cant have the same value:
+Non-canonical: (10, 20, 'a') (15, 25, 'a')
+Canonocal: (10, 25, 'a')
 */
 #[derive(Debug)]
 pub struct IntervalMap<'a, K, V> {
@@ -89,6 +91,8 @@ where
         return self.m_map.get(sorted_keys.get(idx).unwrap()).unwrap();
     }
 
+    // Does a binary search for the value => Returns the biggest value in the map that is
+    // smaller than the key
     fn find_index(&self, keys: &Vec<&K>, key: &K) -> usize {
         let mut low = 0;
         let mut high = (keys.len() - 1) as i32;
